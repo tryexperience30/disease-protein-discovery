@@ -1,0 +1,20 @@
+# Render Blueprint for the FastAPI research API.
+# Keep the service root at the Git repository root so data/, results/,
+# and the research modules stay in their existing locations.
+# The start command cds into backend/ because the repo root also contains
+# a Streamlit package named app/, which would shadow backend.app.
+services:
+  - type: web
+    name: disease-protein-api
+    runtime: python
+    plan: standard
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.14
+      - key: CORS_ORIGINS
+        sync: false
+      - key: CORS_ORIGIN_REGEX
+        value: https://.*\.vercel\.app

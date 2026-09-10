@@ -1,5 +1,15 @@
+# FastAPI runtime (Render installs this file from the repository root).
 fastapi>=0.110
 uvicorn[standard]>=0.27
 pydantic>=2.0
+
+# Research pipeline modules imported by the API (unchanged algorithms).
+pandas>=2.0
+networkx>=3.0
+numpy>=1.24
+scikit-learn>=1.3
+scipy>=1.10
+
+# Local API tests only.
 httpx>=0.27
 pytest>=8.0
