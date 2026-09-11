@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ConceptExplainer } from "@/components/ConceptExplainer";
 import { GraphletChart } from "@/components/GraphletChart";
 import { NetworkCanvas } from "@/components/NetworkCanvas";
 import { apiGet } from "@/lib/api";
@@ -17,7 +18,7 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
   const [graphlets, setGraphlets] = useState<ProteinGraphletContext | null>(null);
   const [networkNote, setNetworkNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<"3d" | "2d">("3d");
+  const [view, setView] = useState<"3d" | "2d">("2d");
 
   useEffect(() => {
     let cancelled = false;
@@ -72,22 +73,43 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
 
   return (
     <div className="space-y-8">
-      <header>
-        <p className="text-xs uppercase tracking-[0.2em] text-muted">Protein explorer</p>
-        <h1 className="mt-2 text-3xl font-semibold">{protein.label}</h1>
-        <p className="mt-2 max-w-3xl text-sm text-muted">{protein.graphlet_note}</p>
+      <header className="stack-copy">
+        <p className="eyebrow">Protein explorer</p>
+        <h1 className="page-title">
+          Entrez <span className="font-tech">{protein.id}</span>
+        </h1>
+        <p className="lede">{protein.graphlet_note}</p>
         <dl className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <div className="panel p-3"><dt className="text-xs text-muted">Gene ID</dt><dd className="font-mono">{protein.id}</dd></div>
-          <div className="panel p-3"><dt className="text-xs text-muted">Degree</dt><dd className="font-mono">{formatInt(protein.degree)}</dd></div>
-          <div className="panel p-3"><dt className="text-xs text-muted">Clustering</dt><dd className="font-mono">{formatScore(protein.clustering_coefficient)}</dd></div>
-          <div className="panel p-3"><dt className="text-xs text-muted">Known diseases</dt><dd className="font-mono">{formatInt(protein.n_associated_diseases)}</dd></div>
+          <div className="panel p-3">
+            <dt className="text-xs text-muted">
+              Gene ID <ConceptExplainer conceptId="gene" />
+            </dt>
+            <dd className="font-tech">{protein.id}</dd>
+          </div>
+          <div className="panel p-3">
+            <dt className="text-xs text-muted">Degree</dt>
+            <dd className="font-tech">{formatInt(protein.degree)}</dd>
+          </div>
+          <div className="panel p-3">
+            <dt className="text-xs text-muted">Clustering</dt>
+            <dd className="font-tech">{formatScore(protein.clustering_coefficient)}</dd>
+          </div>
+          <div className="panel p-3">
+            <dt className="text-xs text-muted">Known diseases</dt>
+            <dd className="font-tech">{formatInt(protein.n_associated_diseases)}</dd>
+          </div>
         </dl>
       </header>
 
       <section>
-        <h2 className="mb-3 text-xl">Disease associations</h2>
+        <h2 className="section-title mb-3">
+          Disease associations <ConceptExplainer conceptId="disease" />
+        </h2>
         {diseases.length === 0 ? (
-          <p className="text-sm text-muted">No known associations in this dataset. The protein may still appear as a computational candidate.</p>
+          <p className="text-sm text-muted">
+            No known associations in this dataset. The protein may still appear as a computational
+            candidate.
+          </p>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-line">
             <table className="min-w-full text-sm">
@@ -102,9 +124,11 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
                 {diseases.map((d) => (
                   <tr key={d.disease_id} className="border-t border-line">
                     <td className="px-3 py-2">
-                      <Link className="text-accent" href={`/disease/${d.disease_id}`}>{d.disease_name}</Link>
+                      <Link className="text-accent" href={`/disease/${d.disease_id}`}>
+                        {d.disease_name}
+                      </Link>
                     </td>
-                    <td className="px-3 py-2 font-mono">{d.disease_id}</td>
+                    <td className="font-tech px-3 py-2">{d.disease_id}</td>
                     <td className="px-3 py-2 text-muted">{d.category || "—"}</td>
                   </tr>
                 ))}
@@ -115,21 +139,42 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
       </section>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl">Network neighborhood</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="section-title">
+            Network neighborhood <ConceptExplainer conceptId="neighborhood" />
+          </h2>
           <div className="inline-flex rounded-full border border-line p-1 text-sm">
-            <button type="button" className={`rounded-full px-3 py-1 ${view === "3d" ? "bg-white/10" : "text-muted"}`} onClick={() => setView("3d")}>3D</button>
-            <button type="button" className={`rounded-full px-3 py-1 ${view === "2d" ? "bg-white/10" : "text-muted"}`} onClick={() => setView("2d")}>2D</button>
+            <button
+              type="button"
+              className={`rounded-full px-3 py-1 ${view === "2d" ? "chip-on" : "text-muted"}`}
+              onClick={() => setView("2d")}
+            >
+              2D
+            </button>
+            <button
+              type="button"
+              className={`rounded-full px-3 py-1 ${view === "3d" ? "chip-on" : "text-muted"}`}
+              onClick={() => setView("3d")}
+            >
+              3D
+            </button>
           </div>
         </div>
         {graph && (
-          <NetworkCanvas graph={graph} mode={view} showLabels={false} onSelect={() => undefined} highlightId={protein.id} />
+          <NetworkCanvas graph={graph} mode={view} onSelect={() => undefined} highlightId={protein.id} />
         )}
         {!graph && networkNote && <p className="text-sm text-muted">{networkNote}</p>}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-xl">Graphlet context</h2>
+        <h2 className="section-title">
+          Graphlet context <ConceptExplainer conceptId="graphlet" />
+        </h2>
+        <p className="text-sm text-muted">
+          If an associated disease exists, the chart below is that disease’s 73-dimensional orbit
+          profile. It is not a per-protein ORCA signature. The 12-dimensional motif-signature proxy
+          is shown separately in research mode.
+        </p>
         {orbitProfile ? (
           <GraphletChart orbits={orbitProfile.orbits} title={`Disease-level orbits: ${orbitProfile.disease_name}`} />
         ) : (
@@ -137,12 +182,14 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
         )}
         {mode === "research" && (
           <div className="panel p-4">
-            <h3 className="text-sm text-muted">12-dimensional motif-signature proxy</h3>
+            <h3 className="text-sm text-muted">
+              12-dimensional motif-signature proxy <ConceptExplainer conceptId="motif" />
+            </h3>
             <dl className="mt-3 grid gap-2 md:grid-cols-3">
               {Object.entries(features).map(([k, v]) => (
                 <div key={k}>
                   <dt className="text-xs text-muted">{k}</dt>
-                  <dd className="font-mono text-sm">{formatScore(v as number)}</dd>
+                  <dd className="font-tech text-sm">{formatScore(v as number)}</dd>
                 </div>
               ))}
             </dl>

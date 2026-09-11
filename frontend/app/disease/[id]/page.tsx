@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { DiseaseExplorer } from "@/components/DiseaseExplorer";
 import { apiGet } from "@/lib/api";
 import type { DiseaseDetail } from "@/types";
@@ -29,5 +30,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DiseasePage({ params }: Props) {
   const { id } = await params;
-  return <DiseaseExplorer diseaseId={id} />;
+  return (
+    <Suspense fallback={<p className="text-muted">Loading disease workspace…</p>}>
+      <DiseaseExplorer diseaseId={id} />
+    </Suspense>
+  );
 }

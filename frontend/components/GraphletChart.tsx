@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ConceptExplainer } from "@/components/ConceptExplainer";
 
 type Orbit = {
   orbit: number;
@@ -27,20 +28,21 @@ export function GraphletChart({
 
   return (
     <div className="panel p-5">
-      {title && <h3 className="mb-3 text-sm text-muted">{title}</h3>}
+      {title && <h3 className="font-display mb-3 text-sm font-semibold text-muted">{title}</h3>}
       <div className="flex h-40 items-end gap-px overflow-x-auto">
         {compact.map((o) => (
           <div
             key={o.orbit}
             title={`Orbit ${o.orbit} (${o.graphlet_size}) p=${o.p_value ?? "NA"}`}
-            className={`w-1.5 min-w-[4px] rounded-t ${o.significant ? "bg-accent" : "bg-white/20"}`}
+            className={`w-1.5 min-w-[4px] rounded-t ${o.significant ? "bg-accent" : "bg-[var(--highlight)]"}`}
             style={{ height: `${Math.max(o.height, 2)}%` }}
           />
         ))}
       </div>
       <p className="mt-3 text-sm text-muted">
         Bars show −log10(p). Highlighted bars are significant at p &lt; 0.01.
-        These are disease-level orbit p-values, not per-protein ORCA counts.
+        These are disease-level orbit p-values, not per-protein ORCA counts.{" "}
+        <ConceptExplainer conceptId="orbit" tone="learn" />
       </p>
       <button
         type="button"

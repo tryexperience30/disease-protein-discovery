@@ -75,7 +75,7 @@ export function SearchBox({ compact = false, autoFocus = false }: { compact?: bo
             go(hits[active]);
           } else if (e.key === "Escape") setOpen(false);
         }}
-        className={`w-full rounded-xl border border-line bg-[#0c111b] px-4 text-foreground placeholder:text-muted ${
+        className={`w-full rounded-xl border border-line bg-[var(--panel)] px-4 text-foreground placeholder:text-muted ${
           compact ? "h-10 text-sm" : "h-14 text-base"
         }`}
         autoComplete="off"
@@ -83,7 +83,7 @@ export function SearchBox({ compact = false, autoFocus = false }: { compact?: bo
       {open && (
         <ul
           role="listbox"
-          className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-line bg-[#10151f] shadow-2xl"
+          className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-line bg-[var(--panel)] shadow-2xl"
         >
           {error && <li className="px-4 py-3 text-sm text-predict">{error}</li>}
           {!error && hits.length === 0 && (

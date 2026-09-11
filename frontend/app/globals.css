@@ -1,13 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #080b12;
-  --foreground: #e7eef8;
-  --muted: #93a0b5;
-  --panel: rgba(16, 21, 32, 0.86);
-  --line: #243044;
-  --accent: #4aa3f0;
-  --predict: #e3a04a;
+:root,
+[data-theme="light"] {
+  --background: #e3fdfd;
+  --foreground: #163038;
+  --muted: #3d5c62;
+  --panel: #cbf1f5;
+  --line: #8ec5c9;
+  --accent: #71c9ce;
+  --accent-strong: #2f8b91;
+  --predict: #c45c26;
+  --highlight: #a6e3e9;
+  --glow: rgba(113, 201, 206, 0.28);
+  --glow-warm: rgba(166, 227, 233, 0.4);
+  --canvas: #e3fdfd;
+}
+
+[data-theme="dark"] {
+  --background: #0e1c1e;
+  --foreground: #e3fdfd;
+  --muted: #a6e3e9;
+  --panel: #163236;
+  --line: #2f5c61;
+  --accent: #71c9ce;
+  --accent-strong: #a6e3e9;
+  --predict: #e08a3c;
+  --highlight: #a6e3e9;
+  --glow: rgba(113, 201, 206, 0.18);
+  --glow-warm: rgba(166, 227, 233, 0.12);
+  --canvas: #143033;
 }
 
 @theme inline {
@@ -18,38 +39,209 @@
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-predict: var(--predict);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-tech);
 }
 
 html,
 body {
   min-height: 100%;
+  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
 }
 
 body {
-  font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
+  font-family: var(--font-ui), "Inter", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
   background-image:
-    radial-gradient(1200px 500px at 10% -10%, rgba(74, 163, 240, 0.14), transparent 55%),
-    radial-gradient(900px 400px at 90% 0%, rgba(227, 160, 74, 0.08), transparent 50%);
+    radial-gradient(1100px 520px at 8% -12%, var(--glow), transparent 58%),
+    radial-gradient(900px 420px at 92% 0%, var(--glow-warm), transparent 52%);
 }
 
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
+}
+
+a {
+  color: var(--accent-strong);
+}
+
+.font-display {
+  font-family: var(--font-display), "Space Grotesk", var(--font-sans), sans-serif;
+}
+
+.font-tech {
+  font-family: var(--font-tech), "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.page-title {
+  font-family: var(--font-display), "Space Grotesk", sans-serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.hero-title {
+  font-family: var(--font-display), "Space Grotesk", sans-serif;
+  font-size: clamp(2.4rem, 5vw, 3.55rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.section-title {
+  font-family: var(--font-display), "Space Grotesk", sans-serif;
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  max-width: 42rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.stack-copy > * + * {
+  margin-top: 0.85rem;
+}
+
+.section-band {
+  position: relative;
+  isolation: isolate;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.section-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0.35;
+  background-image:
+    radial-gradient(circle at 12% 20%, color-mix(in srgb, var(--accent) 28%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--accent-strong) 22%, transparent) 0 1.2px, transparent 2px);
+  background-size: 84px 64px, 110px 86px;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .section-band {
+    padding: 2rem;
+  }
 }
 
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(22, 48, 56, 0.06);
+}
+
+.panel-hover {
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.panel-hover:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 16px 36px rgba(22, 48, 56, 0.1);
 }
 
 .muted {
   color: var(--muted);
+}
+
+.chip-on {
+  background: var(--accent);
+  color: var(--foreground);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--foreground);
+  padding: 0.7rem 1.15rem;
+  font-weight: 600;
+}
+
+.cta:hover {
+  background: color-mix(in srgb, var(--accent) 80%, var(--foreground));
+}
+
+.score-bar {
+  height: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.score-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--highlight));
+}
+
+.concept-popover,
+.concept-popover * {
+  text-transform: none !important;
+  letter-spacing: normal;
+}
+
+.art-caption {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.deco-line {
+  stroke-dasharray: 8 10;
+  animation: deco-flow 18s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deco-line,
+  .panel-hover {
+    animation: none;
+    transition: none;
+  }
+}
+
+@keyframes deco-flow {
+  to {
+    stroke-dashoffset: -180;
+  }
+}
+
+.metric-value {
+  font-family: var(--font-tech), "JetBrains Mono", ui-monospace, monospace;
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
