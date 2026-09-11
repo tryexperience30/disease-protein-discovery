@@ -53,7 +53,7 @@ export default function MethodologyPage() {
         <p className="text-sm text-muted">
           Neighborhood scoring, Random Walk with Restart (α=0.7), DIAMOnD (z-score approximation),
           spectral embeddings (truncated SVD, 64-d) with logistic regression, and NMF matrix completion.
-          The live combined score is the mean of min–max-normalized method scores.
+          The combined score is the mean of min–max-normalized method scores.
         </p>
       </section>
 

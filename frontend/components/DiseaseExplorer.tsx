@@ -260,7 +260,9 @@ export function DiseaseExplorer({ diseaseId }: { diseaseId: string }) {
 
       {tab === "predictions" && (
         <section className="space-y-4">
-          {loadingPred && <p className="text-muted">Running the five prediction methods. First request prepares the engine once.</p>}
+          {loadingPred && (
+            <p className="text-muted">Loading precomputed rankings from the validated research pipeline…</p>
+          )}
           {preds && preds.predictions.length === 0 && <p className="text-muted">No ranked candidates for this disease.</p>}
           {preds && preds.predictions.length > 0 && (
             <PredictionTable

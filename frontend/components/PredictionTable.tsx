@@ -87,36 +87,38 @@ export function PredictionTable({
           </tbody>
         </table>
       </div>
-      {mode === "research" && (
-        <div className="overflow-x-auto rounded-xl border border-line">
-          <table className="min-w-full text-left text-xs">
-            <thead className="text-muted">
-              <tr>
-                <th className="px-3 py-2">Protein</th>
-                <th className="px-3 py-2">Neighborhood</th>
-                <th className="px-3 py-2">Random Walk</th>
-                <th className="px-3 py-2">DIAMOnD</th>
-                <th className="px-3 py-2">Embeddings</th>
-                <th className="px-3 py-2">Matrix Completion</th>
-                <th className="px-3 py-2">Edge to pathway</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row: PredictionRow) => (
-                <tr key={`r-${row.protein_id}`} className="border-t border-line font-mono">
-                  <td className="px-3 py-2">{row.protein_id}</td>
-                  <td className="px-3 py-2">{formatScore(row.neighborhood)}</td>
-                  <td className="px-3 py-2">{formatScore(row.random_walk)}</td>
-                  <td className="px-3 py-2">{formatScore(row.diamond)}</td>
-                  <td className="px-3 py-2">{formatScore(row.neural_embeddings)}</td>
-                  <td className="px-3 py-2">{formatScore(row.matrix_completion)}</td>
+      <div className="overflow-x-auto rounded-xl border border-line">
+        <table className="min-w-full text-left text-xs">
+          <thead className="text-muted">
+            <tr>
+              <th className="px-3 py-2">Protein</th>
+              <th className="px-3 py-2">Neighborhood</th>
+              <th className="px-3 py-2">Random Walk</th>
+              <th className="px-3 py-2">DIAMOnD</th>
+              <th className="px-3 py-2">Embeddings</th>
+              <th className="px-3 py-2">Matrix Completion</th>
+              <th className="px-3 py-2">Combined Score</th>
+              {mode === "research" && <th className="px-3 py-2">Edge to pathway</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row: PredictionRow) => (
+              <tr key={`r-${row.protein_id}`} className="border-t border-line font-mono">
+                <td className="px-3 py-2">{row.protein_id}</td>
+                <td className="px-3 py-2">{formatScore(row.neighborhood)}</td>
+                <td className="px-3 py-2">{formatScore(row.random_walk)}</td>
+                <td className="px-3 py-2">{formatScore(row.diamond)}</td>
+                <td className="px-3 py-2">{formatScore(row.neural_embeddings)}</td>
+                <td className="px-3 py-2">{formatScore(row.matrix_completion)}</td>
+                <td className="px-3 py-2">{formatScore(row.combined_score)}</td>
+                {mode === "research" && (
                   <td className="px-3 py-2">{row.has_edge_to_pathway ? "yes" : "no"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

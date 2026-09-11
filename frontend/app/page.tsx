@@ -37,8 +37,12 @@ export default function HomePage() {
           Disease–Protein Network Intelligence
         </h1>
         <p className="max-w-2xl text-lg leading-relaxed text-muted">
-          Explore disease-associated protein interaction networks and computationally
-          predicted disease–protein associations.
+          An interactive computational reproduction and exploration of disease pathways in
+          the human interactome, based on Agrawal, Zitnik &amp; Leskovec,{" "}
+          <em>Large-scale analysis of disease pathways in the human interactome</em> (PSB 2018),
+          using the SNAP disease-pathway PPI and DisGeNET association datasets. Documented
+          method deviations are listed on the Methodology page. This is a research presentation
+          layer, not a new prediction algorithm and not a clinical diagnostic tool.
         </p>
         <SearchBox autoFocus />
       </section>

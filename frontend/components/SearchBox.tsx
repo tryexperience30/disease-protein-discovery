@@ -28,7 +28,7 @@ export function SearchBox({ compact = false, autoFocus = false }: { compact?: bo
         setActive(0);
         setError(null);
       } catch {
-        setError("Search is unavailable. Is the API running?");
+        setError("Unable to load search data. Please try again.");
         setHits([]);
         setOpen(true);
       }
