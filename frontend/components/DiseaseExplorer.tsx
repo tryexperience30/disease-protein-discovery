@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { apiGet, downloadUrl } from "@/lib/api";
+import { apiGet, downloadResource, isStaticMode } from "@/lib/api";
 import { formatInt } from "@/lib/format";
 import type {
   DiseaseDetail,
@@ -213,7 +213,7 @@ export function DiseaseExplorer({ diseaseId }: { diseaseId: string }) {
               Neighborhood
               <select value={hops} onChange={(e) => setHops(Number(e.target.value))} className="rounded-md border border-line bg-[#0c111b] px-2 py-1">
                 <option value={0}>Pathway only</option>
-                <option value={1}>1-hop (capped)</option>
+                <option value={1}>{isStaticMode() ? "1-hop (not in static data)" : "1-hop (capped)"}</option>
               </select>
             </label>
             <span className="text-xs text-muted">
@@ -273,9 +273,15 @@ export function DiseaseExplorer({ diseaseId }: { diseaseId: string }) {
             />
           )}
           {mode === "research" && (
-            <a className="text-sm text-accent" href={downloadUrl(`/api/diseases/${diseaseId}/downloads/predictions.csv`)}>
+            <button
+              type="button"
+              className="text-sm text-accent"
+              onClick={() =>
+                void downloadResource(`/api/diseases/${diseaseId}/downloads/predictions.csv?top_k=100`)
+              }
+            >
               Download prediction table (CSV)
-            </a>
+            </button>
           )}
         </section>
       )}
@@ -286,9 +292,13 @@ export function DiseaseExplorer({ diseaseId }: { diseaseId: string }) {
           <p className="text-sm">{orbits.n_significant} of 73 orbits significant (p &lt; 0.01)</p>
           <GraphletChart orbits={orbits.orbits} />
           {mode === "research" && (
-            <a className="text-sm text-accent" href={downloadUrl(`/api/diseases/${diseaseId}/downloads/graphlets.csv`)}>
+            <button
+              type="button"
+              className="text-sm text-accent"
+              onClick={() => void downloadResource(`/api/diseases/${diseaseId}/downloads/graphlets.csv`)}
+            >
               Download orbit p-values (CSV)
-            </a>
+            </button>
           )}
         </section>
       )}

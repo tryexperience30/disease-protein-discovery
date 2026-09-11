@@ -5,6 +5,15 @@ import type { DiseaseDetail } from "@/types";
 
 type Props = { params: Promise<{ id: string }> };
 
+export async function generateStaticParams() {
+  try {
+    const data = await apiGet<{ diseases: { id: string }[] }>("/api/diseases?limit=519");
+    return data.diseases.map((d) => ({ id: d.id }));
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   try {

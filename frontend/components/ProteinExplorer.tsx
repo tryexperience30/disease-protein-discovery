@@ -15,26 +15,41 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
   const [diseases, setDiseases] = useState<ProteinDiseaseLink[]>([]);
   const [graph, setGraph] = useState<NetworkGraph | null>(null);
   const [graphlets, setGraphlets] = useState<ProteinGraphletContext | null>(null);
+  const [networkNote, setNetworkNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<"3d" | "2d">("3d");
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([
-      apiGet<ProteinOverview>(`/api/proteins/${proteinId}`),
-      apiGet<{ diseases: ProteinDiseaseLink[] }>(`/api/proteins/${proteinId}/diseases`),
-      apiGet<NetworkGraph>(`/api/proteins/${proteinId}/network?hops=1&limit=80`),
-      apiGet<ProteinGraphletContext>(`/api/proteins/${proteinId}/graphlets`),
-    ])
-      .then(([p, d, n, g]) => {
-        if (cancelled) return;
-        setProtein(p);
-        setDiseases(d.diseases);
-        setGraph(n);
-        setGraphlets(g);
+    setError(null);
+    setNetworkNote(null);
+    apiGet<ProteinOverview>(`/api/proteins/${proteinId}`)
+      .then((p) => {
+        if (!cancelled) setProtein(p);
       })
       .catch((e: Error) => {
         if (!cancelled) setError(e.message);
+      });
+    apiGet<{ diseases: ProteinDiseaseLink[] }>(`/api/proteins/${proteinId}/diseases`)
+      .then((d) => {
+        if (!cancelled) setDiseases(d.diseases);
+      })
+      .catch(() => {
+        if (!cancelled) setDiseases([]);
+      });
+    apiGet<NetworkGraph>(`/api/proteins/${proteinId}/network?hops=1&limit=80`)
+      .then((n) => {
+        if (!cancelled) setGraph(n);
+      })
+      .catch((e: Error) => {
+        if (!cancelled) setNetworkNote(e.message);
+      });
+    apiGet<ProteinGraphletContext>(`/api/proteins/${proteinId}/graphlets`)
+      .then((g) => {
+        if (!cancelled) setGraphlets(g);
+      })
+      .catch(() => {
+        if (!cancelled) setGraphlets(null);
       });
     return () => {
       cancelled = true;
@@ -110,6 +125,7 @@ export function ProteinExplorer({ proteinId }: { proteinId: string }) {
         {graph && (
           <NetworkCanvas graph={graph} mode={view} showLabels={false} onSelect={() => undefined} highlightId={protein.id} />
         )}
+        {!graph && networkNote && <p className="text-sm text-muted">{networkNote}</p>}
       </section>
 
       <section className="space-y-3">
